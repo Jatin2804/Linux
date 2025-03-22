@@ -427,6 +427,4 @@ sed 's/old/new/g' file.txt   # Replace 'old' with 'new' in file.txt
 Passes output of one command as input to another.
 
 Example:
-
-  
 ls -l | grep "txt"   # Find .txt files in a directory
