@@ -1,0 +1,432 @@
+Linux File System Structure (According to the Filesystem Hierarchy Standard, FHS):
+
+/ – The root directory; everything is under it.
+/bin – Essential user binaries (programs).
+/etc – Configuration files.
+/home – User home directories.
+/opt – Optional software packages.
+/root – Home directory for the root user.
+/sbin – System administration binaries.
+/tmp – Temporary files.
+/usr – User binaries and read-only data.
+/var – Variable data, such as logs and temporary data.
+
+# Basic Commands
+
+## Navigation & Directory Commands
+- `pwd` (Print Working Directory): Shows the current directory path.
+- `ls` (List): Lists files and directories in the current location.
+    - `ls -a`: Shows all files, including hidden ones (`.` and `..`).
+    - `ls -l`: Displays detailed information (permissions, size, owner, etc.).
+- `mkdir dir` (Make Directory): Creates a new directory named `dir`.
+    - `mkdir -p dir1/dir2/dir3`: Creates all directories in the specified path.
+- `cd dir` (Change Directory): Moves into the specified directory.
+    - `cd ..`: Moves one directory up.
+    - `cd /`: Moves to the root directory (`/`).
+    - `cd -`: Switches back to the last directory you were in.
+
+## File & Text Handling
+- `clear`: Clears the terminal screen.
+- `touch file1.txt`: Creates an empty file named `file1.txt`.
+- `nano file1.txt`: Opens the Nano editor to edit the file.
+- `cat file1.txt` (Concatenate): Displays the content of the file.
+- `less file1.txt`: Views the file’s content one page at a time (useful for large files).
+
+## File Operations
+- `mv file1.txt file2.txt` (Move): Renames `file1.txt` to `file2.txt` or moves it to another location.
+- `cp file1.txt file2.txt` (Copy): Creates a copy of `file1.txt` as `file2.txt`.
+- `rm file1.txt` (Remove): Deletes `file1.txt`.
+
+## Directory Deletion
+- `rmdir dir` (Remove Directory): Deletes an empty directory named `dir`.
+- `rm -R dir` (Remove Recursively): Deletes a directory and all its contents (files and subdirectories).
+
+# System Commands
+- `$ ifconfig` (Interface Configuration): Displays/configures network interfaces (IP, MAC, etc.).
+    - Example: `ifconfig` (Shows all network details).
+    - Note: Use `ip a` in newer Linux versions.
+- `$ uname -a` (Unix Name - All Info): Shows system info (kernel, OS, architecture).
+    - Example: `uname -a` (Displays full system details).
+
+# File Permissions System
+Linux is a multi-user operating system, which is why security is crucial. It enforces file permissions to ensure proper access control:
+
+### Owner Types:
+1. **User**: The file owner.
+2. **Group**: A group of users.
+3. **Others**: Users with read-only, execute, or restricted access.
+
+### Permission Types:
+- **Read (r)**, **Write (w)**, **Execute (x)**.
+
+### Commands:
+- `$ ls -l`: Lists directory contents in a detailed format, showing permissions, ownership, size, and modification time.
+    - Example: `drwxrwxr-x 3 jatin jatin 4096 Mar 19 13:17 Coading`.
+
+    The output you provided is from the ls -l command, which lists files and directories in long format, displaying details like permissions, owner, group, size, and modification date. Let's break it down:
+
+ 
+drwxrwxr-x 3 jatin jatin 4096 Mar 20 12:52 Coading
+drwxr-xr-x 2 jatin jatin 4096 Mar 18 09:49 Desktop
+drwxr-xr-x 2 jatin jatin 4096 Mar 18 09:49 Documents
+Breaking Down Each Part
+ 
+drwxrwxr-x 3 jatin jatin 4096 Mar 20 12:52 Coading
+Part	Meaning
+d	It's a directory (- would indicate a file).
+rwxrwxr-x	Permissions (explained below).
+3	Hard link count (number of references to this directory).
+jatin	Owner (user who owns the file/directory).
+jatin	Group (group associated with the file/directory).
+4096	Size in bytes (4KB is typical for a directory).
+Mar 20 12:52	Last modified date & time
+Coading	Directory name
+Understanding File Permissions (rwxrwxr-x)
+Each file or directory has three sets of permissions:
+
+Owner (rwx) → The user jatin can read (r), write (w), and execute (x).
+Group (rwx) → Users in group jatin can read (r), write (w), and execute (x).
+Others (r-x) → Other users can read (r) and execute (x), but not write (-w-).
+Symbol	Permission	Meaning
+r	Read	Can view the contents
+w	Write	Can modify/delete
+x	Execute	Can run as a program or enter a directory
+-	No permission	Access denied
+For example:
+
+drwxrwxr-x means:
+d → It's a directory.
+rwx → Owner can read, write, execute.
+rwx → Group can read, write, execute.
+r-x → Others can only read and execute.
+
+- To change permissions:
+    - `$ chmod <absolute code> <filename>`: Changes permissions for all three owners.
+        - Example: `chmod 764 file.txt` (Owner: rwx, Group: rw, Others: r).
+    - `$ chmod <symbol> <filename>`: Changes permissions in a specific mode.
+        - Example: `chmod o=rwx file.txt` or `chmod o-r file.txt`.
+
+- To change ownership:
+    - `sudo chown <user> <filename>`: Changes the owner of the file.
+    - `sudo chown <user>:<group> <filename>`: Changes both the owner and group.
+    - `sudo chgrp <group> <filename>`: Changes the group of the file.
+
+# Tips on User Groups
+- `/etc/group`: This file contains group information for the system. Each line represents a group and includes:
+    - Group name.
+    - Password (if any).
+    - Group ID (GID).
+    - List of users in the group.
+
+- `groups`: Displays the groups that the specified user is a member of. If no user is specified, it shows the groups for the current user.
+
+- `newgrp`: Temporarily changes the current group ID during a login session.
+
+**Note**: A file can only have one group owner at a time. While multiple users can belong to a group and access the file, the file itself is associated with a single group.
+
+## Pipes
+- **Symbol**: `|` (Pipe symbol).
+- **Purpose**: Allows the output of one command to be used as the input for another command.
+    - Example: `ls -l | grep "file"` (Lists files in detailed format and filters(Search) results containing "file").
+
+sort filename.txt ( can sort data alphabetically, numerically, and in various other ways. )
+sort -r filename.txt
+sort -n filename.txt
+sort -f filename.txt
+
+-r: Reverses the sorting order.
+-n: Sorts numerically.
+-f: Performs case-insensitive sorting.
+
+
+(Find count of words)
+grep -o -i "Harry" goblet_of_fire.txt | wc -l
+grep -o -i "Ron" goblet_of_fire.txt | wc -l
+grep -o -i "Hermione" goblet_of_fire.txt | wc -l
+grep -o -i "Dumbledore" goblet_of_fire.txt | wc -l
+Explanation:
+
+-o → Extracts only the matching words
+-i → Case-insensitive
+wc -l → Counts occurrences
+
+(print lines)
+head -n 3 goblet_of_fire.txt (top 3)
+tail -n 10 goblet_of_fire.txt
+
+sed -n '100,200p' goblet_of_fire.txt
+Explanation:
+
+sed: Stream Editor in Linux used for text processing.
+-n: Suppresses automatic printing of lines (otherwise sed prints every line by default).
+'100,200p': Specifies a range of lines (100 to 200) to be printed.
+goblet_of_fire.txt: The file being processed.
+
+tr '[:space:]' '[\n*]' < goblet_of_fire.txt | sort | uniq | wc -l
+What it does:
+
+tr '[:space:]' '[\n*]' → Replaces all spaces with newlines to put each word on a new line.
+sort → Sorts the words alphabetically.
+uniq → Removes duplicate words.
+wc -l → Counts the number of unique words.
+
+
+Here’s a detailed explanation of all the commands you listed, categorized with examples:
+
+Bread and Butter Commands (Essential Commands)
+1. man (Manual Pages) - Super Important
+Displays the manual (help) for a command.
+Example:
+
+  
+man ls   # Shows the manual page for ls command
+man man  # Shows the manual page for man itself
+
+2. cd (Change Directory) - Important Flags
+Used to navigate between directories.
+
+cd . → Stay in the current directory.
+cd .. → Move one directory up.
+cd ~ → Move to the home directory.
+cd - → Switch to the last directory.
+Example:
+
+  
+cd /var/log    # Go to the /var/log directory
+cd ~           # Go to the home directory
+cd -           # Switch back to the previous directory
+
+
+3. mkdir (Make Directory)
+Creates a new directory.
+
+Example:
+
+  
+mkdir new_folder   # Creates a directory named new_folder
+mkdir -p a/b/c     # Creates nested directories (a -> b -> c)
+
+
+4. mv (Move/Rename Files & Directories)
+Moves or renames files and directories.
+
+Example:
+
+  
+mv file1.txt file2.txt    # Rename file1.txt to file2.txt
+mv file.txt /tmp/         # Move file.txt to /tmp/ directory
+
+
+5. cp (Copy Files & Directories) with Recursive Flag (-r)
+Copies files and directories.
+
+Example:
+
+  
+cp file1.txt file2.txt    # Copy a single file
+            This copies a single file (file1.txt) to file2.txt.
+            If file2.txt already exists, it will be overwritten.
+            If file2.txt does not exist, it will be created.
+cp -r dir1 dir2           # Copy directory dir1 to dir2
+            The -r (recursive) flag is used to copy directories.
+            This copies the entire contents of dir1 (including all subdirectories and files) into dir2.
+            If dir2 does not exist, it will be created as a copy of dir1.
+            If dir2 exists, dir1 will be copied inside it as a subdirectory.
+
+6. ls (List Directory Contents) with Flags
+Lists files in a directory.
+
+ls -l → Long format (permissions, size, owner, etc.).
+ls -a → Show hidden files.
+ls -lh → Human-readable sizes.
+ls -lt → Sort by modification time.
+Example:
+ls -alh   # List all files (including hidden) in long format with human-readable sizes
+
+7. pwd (Print Working Directory)
+Displays the full path of the current directory.
+
+Example:
+pwd    # Outputs: /home/user/documents
+
+8. rm (Remove Files & Directories)
+Deletes files and directories.
+
+rm file.txt → Delete a file.
+rm -r folder → Delete a directory and its contents.
+rm -rf folder → Force delete a directory (without prompt).
+Example:
+
+  
+rm -rf /tmp/test_folder   # Deletes the test_folder and its contents
+
+9. chmod (Change File Permissions) - Super Important
+Modifies file permissions.
+
+chmod 777 file → Full permissions for everyone.
+chmod 644 file → Read & write for owner, read-only for others.
+Example:
+chmod +x script.sh   # Makes script.sh executable
+
+10. chown (Change Ownership) - Super Important
+Changes file ownership.
+
+Example:
+chown user:user file.txt   # Change ownership to user
+chown -R user:user folder  # Change ownership recursively for a folder
+
+11. sudo (Superuser Do)
+Executes commands as root.
+
+Example:
+sudo apt update    # Run package update as root
+
+12. apt (Advanced Package Tool)
+Used for installing, updating, and managing packages on Debian-based systems.
+
+Example:
+sudo apt install tree   # Install tree package
+sudo apt update         # Update package list
+
+13. touch (Create Empty Files)
+Creates an empty file or updates the timestamp.
+
+Example:
+touch file.txt   # Creates an empty file named file.txt
+
+14. cat (Concatenate and Display Files)
+Displays file contents.
+
+Example:
+cat file.txt    # Display the contents of file.txt
+
+15. less & more (View File Contents Page-by-Page)
+Example:
+less file.txt   # View file.txt interactively
+more file.txt   # View file.txt (only forward navigation)
+
+16. tail (View Last N Lines of a File)
+Example:
+tail -n 10 file.txt   # Show last 10 lines
+tail -f log.txt       # Monitor log file in real-time
+
+17. rsync (Remote File Synchronization)
+Syncs files between directories or remote systems.
+
+Example:
+rsync -av source/ destination/   # Copy files preserving metadata
+
+18. grep (Search in Files)
+Example:
+
+  
+grep "error" logfile.txt   # Find "error" in logfile.txt
+
+19. find (Find Files) - Super Important
+Example:
+find /home -name "*.txt"   # Find all .txt files in /home
+
+20. sort (Sort Lines in a File)
+Example:
+sort file.txt   # Sort file alphabetically
+
+21. date (Show System Date & Time)
+Example:
+date   # Display the current date and time
+
+22. tree (Display Directory Tree - Needs Installation)
+Example:
+tree /home/user   # Show a tree structure of directories
+
+23. wc (Word Count)
+Example:
+wc -l file.txt   # Count lines in file.txt
+
+OS/Process Related Commands
+
+24. ps (Show Running Processes)
+Example:
+
+  
+ps aux   # Show all processes
+25. top (Monitor System Resource Usage)
+Example:
+
+  
+top    # Show live process stats
+26. df (Disk Usage)
+Example:
+
+  
+df -h   # Show disk usage in human-readable format
+27. uname (System Information)
+Example:
+
+  
+uname -a   # Show all system info
+28. free (Show Memory Usage)
+Example:
+
+  
+free -m   # Show memory in MB
+29. lspci (List PCI Devices)
+Example:
+
+  
+lspci   # Show connected PCI devices
+30. kill (Terminate Process)
+Example:
+
+  
+kill -9 1234   # Kill process with PID 1234
+Network Related Commands
+31. ping (Check Network Connectivity)
+Example:
+
+  
+ping google.com   # Test internet connection
+32. ifconfig (Network Interfaces - Older Command)
+Example:
+
+  
+ifconfig   # Show IP addresses
+33. ssh (Secure Shell - Remote Login)
+Example:
+
+  
+ssh user@192.168.1.10   # Connect to a remote system
+Bash Related Commands
+34. xargs (Convert Input to Arguments)
+Example:
+
+  
+echo "file1 file2 file3" | xargs rm   # Delete multiple files
+35. printenv (Show Environment Variables)
+Example:
+
+  
+printenv PATH   # Show PATH variable
+36. nano (Simple Text Editor)
+Example:
+
+  
+nano file.txt   # Edit file.txt
+37. awk (Text Processing)
+Example:
+
+  
+awk '{print $1}' file.txt   # Print first column of a file
+
+38. sed (Stream Editing - Find & Replace)
+Example:
+
+  
+sed 's/old/new/g' file.txt   # Replace 'old' with 'new' in file.txt
+
+39. Pipe Operator (|)
+Passes output of one command as input to another.
+
+Example:
+
+  
+ls -l | grep "txt"   # Find .txt files in a directory
