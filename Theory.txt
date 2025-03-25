@@ -72,13 +72,14 @@ drwxr-xr-x 2 jatin jatin 4096 Mar 18 09:49 Documents
 Breaking Down Each Part
  
 drwxrwxr-x 3 jatin jatin 4096 Mar 20 12:52 Coading
-Part	Meaning
-d	It's a directory (- would indicate a file).
-rwxrwxr-x	Permissions (explained below).
-3	Hard link count (number of references to this directory).
-jatin	Owner (user who owns the file/directory).
-jatin	Group (group associated with the file/directory).
-4096	Size in bytes (4KB is typical for a directory).
+
+Part	        Meaning
+d	           It's a directory (- would indicate a file).
+rwxrwxr-x     	Permissions (explained below).
+3	          Hard link count (number of references to this directory).
+jatin	     Owner (user who owns the file/directory).
+jatin	     Group (group associated with the file/directory).
+4096	     Size in bytes (4KB is typical for a directory).
 Mar 20 12:52	Last modified date & time
 Coading	Directory name
 Understanding File Permissions (rwxrwxr-x)
@@ -105,11 +106,16 @@ r-x → Others can only read and execute.
         - Example: `chmod 764 file.txt` (Owner: rwx, Group: rw, Others: r).
     - `$ chmod <symbol> <filename>`: Changes permissions in a specific mode.
         - Example: `chmod o=rwx file.txt` or `chmod o-r file.txt`.
+        a->author
+        g->group
+        o->others
 
 - To change ownership:
     - `sudo chown <user> <filename>`: Changes the owner of the file.
     - `sudo chown <user>:<group> <filename>`: Changes both the owner and group.
     - `sudo chgrp <group> <filename>`: Changes the group of the file.
+    If no output is shown, the group does not exist. You can create it using:
+      sudo groupadd mountblue
 
 # Tips on User Groups
 - `/etc/group`: This file contains group information for the system. Each line represents a group and includes:
@@ -174,6 +180,7 @@ wc -l → Counts the number of unique words.
 Here’s a detailed explanation of all the commands you listed, categorized with examples:
 
 Bread and Butter Commands (Essential Commands)
+
 1. man (Manual Pages) - Super Important
 Displays the manual (help) for a command.
 Example:
@@ -346,14 +353,12 @@ OS/Process Related Commands
 
 24. ps (Show Running Processes)
 Example:
+ps aux   # Show all processes 
 
-  
-ps aux   # Show all processes
 25. top (Monitor System Resource Usage)
 Example:
-
-  
 top    # Show live process stats
+
 26. df (Disk Usage)
 Example:
 
@@ -428,3 +433,133 @@ Passes output of one command as input to another.
 
 Example:
 ls -l | grep "txt"   # Find .txt files in a directory
+
+
+1. Basic Flags
+Flag	Description	                                    Example
+-e	     Show all processes (system-wide)	             ps -e
+-f	     Full format listing (detailed)	                 ps -f
+-u      user	Show processes for a specific user	     ps -u jatin
+-p      PID	Show a specific process by ID	             ps -p 1234
+-o      format	Customize output format	                 ps -o pid,comm,%cpu,%mem
+
+2.Extended Flags (More Detailed Output)
+Flag	Description	                                                Example
+-a	     Show processes from all users but exclude session leaders	ps -a
+-x	     Show background processes (not attached to a terminal)	    ps -x
+-ax	     Show all running processes, including background	        ps -ax
+-l	     Show long format (includes PPID, PRI, NI, etc.)	        ps -l
+-j	     Show job format (PID, PGID, SID, etc.)	                    ps -j
+-H	     Show processes in a hierarchical (tree) format	            ps -H
+
+3. Commonly Used Combinations
+Command	        Description
+ps aux	        Show all processes with user info, CPU & memory usage
+ps -ef	        Show all processes with a detailed full format
+ps -u jatin	    Show only processes belonging to user "jatin"
+ps -p 1234	    Show details of process ID (PID) 1234
+ps ax | grep firefox
+
+4. Sorting ps Output
+You can sort processes using --sort option:
+
+Command	Description
+`ps aux --sort=-%cpu	head -10`
+`ps aux --sort=-%mem	head -10`
+ps aux --sort=pid	Sort by Process ID (PID)
+
+
+
+Actions that you should be able to perform:
+Create/Read/Update/Delete/Move files and folders from command line
+Check disk status 
+            -> df pr df -h
+Check status of processes, able to extract process ids ( hint: use pipe operator to combine ps, xargs and awk) 
+           -> ps aux | awk '{print $2}'
+           -> ps aux | awk '{print $2}'| xargs -I {} ps -o pid,stat -p {}
+
+             1. xargs
+              xargs is used to pass multiple inputs to a command.
+               it reads from standard input (stdin) and executes a command multiple times using each input value.
+
+                2. -I {}
+                -I {} allows us to define {} as a placeholder for each item from stdin.
+
+                Every input item (e.g., a process ID) replaces {} in the command that follows.
+
+            3 . ps -o pid,stat -p {}
+                ps is used to display information about processes.
+
+                -o pid,stat specifies the output format:
+
+                pid → Shows the Process ID.
+
+                stat → Shows the process status (e.g., R, S, Z, etc.).
+
+                -p {} → Runs ps for a specific process ID, where {} is replaced by each PID from xargs.
+
+
+Getting the most senior parent process 
+            ->  pstree -ap | less or pstree
+
+Change file permissions. Able to explain and manipulate the numerical file permissions. (chmod and chown)
+Able to extract last x lines from files, get word count for a particular word, find a particular word. (basics of sed or awk would do) -> 
+Basics of sed and awk. 
+            -> sed 's/error/failure/g' logfile.txt (This replaces "error" with "failure".)
+
+learn what is the difference between absolute and relative paths
+Practice using absolute and relative paths
+            -> /home/.....
+            -> dir1/...
+
+Learn how to use the find command
+            -> find /home -name "file.txt" (finding file in dir home)
+               find /home -iname "file.txt"(case ignorence)
+            ->find /home -type d -name "Documents"(FInd dir)
+            ->find /home -type f -name "*.txt" (find files by type)
+            -> find /home -type f -name "*.tmp" -delete (find and delete the files)
+             
+Learn ls with the 5 most commonly used flags used such as: -- View hidden files -- Sort by time -- Reverse sort -- Human readable file sizes -- Combining flags to get hidden files, sorted by time in reverse with human readable file sizes.
+            -a → Show hidden files
+            -l → Long format
+            -h → Human-readable sizes
+            -t → Sort by time
+            -r → Reverse order (oldest first)
+
+Find out what are terminal control codes such as Ctrl + D, Ctrl + C, Ctrl + Z etc and use them
+Find out the difference between Ctrl + C and Ctrl + Z
+
+Find out how to use Ctrl + R to reverse search (uSe to search file and directory)
+Find out how to use tab autocompletion
+Find out how to use the arrow keys to navigate history
+
+
+Sample Review Questions:
+Go into your home directory
+Create a directory d1
+Create a file a.txt inside it
+Check permission of a.txt. What are the permissions in decimal format?
+What are three elements in the permission? Do you understand conversion of decimal to binary?
+Change the permissions of a.txt to 755?
+Add a directory d2
+Add b.txt inside d2
+Change permissions of d2 (and everything inside) to 755
+Start the Firefox browser.
+List all processes in your computer
+Find pid of Firefox Browser. Difference between parent process and child process. (hint: you need to learn pipes)
+Kill the process (hint: pipes, awk, xargs, kill)
+What is your user in Linux?
+What is your group in Linux?
+What is your computer architecture? (hint: uname command, learn the flags)
+What is your audio driver? (hint: lspci, learn pipes and grep)
+Go to home folder. Use find command to find all occurrences of "java" text anywhere in any filename or directory name in your system?
+List everything in the home directory to get all files (including hidden), sorted by time in reverse with human readable file sizes.
+Get last x lines for Harry Potter. Get word counts for particular words.
+
+
+Questions:
+What is the difference between service and application?
+What are these wildcards ~, ., .., * and ??
+What are the different flags for kill? Why do we use kill -9 in general?
+Are you clear about file permissions? Explain them? chmod and chown commands?
+Usage of Ctrl+R to search previously run commands, arrow keys, tab autocompletion.
