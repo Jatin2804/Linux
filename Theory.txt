@@ -547,9 +547,11 @@ Change permissions of d2 (and everything inside) to 755
 Start the Firefox browser.
 List all processes in your computer
 Find pid of Firefox Browser. Difference between parent process and child process. (hint: you need to learn pipes)
-Kill the process (hint: pipes, awk, xargs, kill)
-What is your user in Linux?
-What is your group in Linux?
+Kill the process (hint: pipes, awk, xargs, kill)  
+      -> ps aux | grep firefox | grep -v grep | awk '{print $2}' | xargs kill -9
+
+What is your user in Linux? -> id -un
+What is your group in Linux? -> id -ug
 What is your computer architecture? (hint: uname command, learn the flags)
 What is your audio driver? (hint: lspci, learn pipes and grep)
 Go to home folder. Use find command to find all occurrences of "java" text anywhere in any filename or directory name in your system?
@@ -563,3 +565,26 @@ What are these wildcards ~, ., .., * and ??
 What are the different flags for kill? Why do we use kill -9 in general?
 Are you clear about file permissions? Explain them? chmod and chown commands?
 Usage of Ctrl+R to search previously run commands, arrow keys, tab autocompletion.
+
+
+1. Difference Between Service and Application
+Service: Runs in the background, usually without user interaction (e.g., nginx, ssh).
+Application: Runs with user interaction (e.g., Firefox, VS Code).
+
+
+2. Wildcards in Linux
+~ → Home directory (e.g., cd ~ takes you to /home/username).
+. → Current directory.
+.. → Parent directory.
+* → Matches any number of characters (e.g., ls *.txt lists all .txt files).
+?? → Matches exactly two characters (e.g., ls ?? matches files with two-character names).
+
+3. Kill Command Flags
+kill -9 PID → Forcefully kills a process (SIGKILL).
+kill -15 PID → Gracefully terminates a process (SIGTERM).
+kill -1 PID → Reinitializes a process (SIGHUP).
+kill -0 PID → Checks if a process exists.
+
+🔹 Why use kill -9?
+It immediately stops a process that doesn’t respond to kill -15.
+
