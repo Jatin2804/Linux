@@ -551,7 +551,7 @@ Kill the process (hint: pipes, awk, xargs, kill)
       -> ps aux | grep firefox | grep -v grep | awk '{print $2}' | xargs kill -9
 
 What is your user in Linux? -> id -un
-What is your group in Linux? -> id -ug
+What is your group in Linux? -> id -gn
 What is your computer architecture? (hint: uname command, learn the flags)
 What is your audio driver? (hint: lspci, learn pipes and grep)
 Go to home folder. Use find command to find all occurrences of "java" text anywhere in any filename or directory name in your system?
@@ -583,8 +583,10 @@ Application: Runs with user interaction (e.g., Firefox, VS Code).
 kill -9 PID → Forcefully kills a process (SIGKILL).
 kill -15 PID → Gracefully terminates a process (SIGTERM).
 kill -1 PID → Reinitializes a process (SIGHUP).
-kill -0 PID → Checks if a process exists.
+              kill -0 PID → Checks if a process exists.
 
 🔹 Why use kill -9?
 It immediately stops a process that doesn’t respond to kill -15.
+
+###continue .....
 
